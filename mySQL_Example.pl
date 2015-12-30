@@ -1,7 +1,5 @@
 use DBI;
  
-print "Content-type: text/html\n\n";
- 
 ## mysql user database name
 $db ="world";
 ## mysql database user name
