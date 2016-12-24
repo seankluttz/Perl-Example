@@ -1,7 +1,7 @@
 use DBI;
  
-## mysql user database name
-$db ="world";
+## mysql user schema name
+$db ="substation";
 ## mysql database user name
 $user = "root";
  
@@ -13,15 +13,15 @@ $host="localhost";
  
 $dbh = DBI->connect("DBI:mysql:$db:$host", $user, $pass);
 
-my $sql = "SELECT * FROM city WHERE Name='Kabul'";
+my $sql = "SELECT * FROM INVTRY";
 
 my $sth = $dbh ->prepare($sql);
 
 $sth -> execute() or die $DBI::errstr;
 
 while(my @row = $sth -> fetchrow_array()){
-	my ($id,$name) = @row;
-	print "$id, $name\n"; 
+	my ($sku,$description) = @row;
+	print "$sku, $description\n"; 
 }
  
 $sth->finish;
