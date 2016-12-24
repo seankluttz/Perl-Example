@@ -23,22 +23,22 @@ $worksheet->write('A2','Sub Name',$format);
 $worksheet->write('B2','SKU',$format);
 $worksheet->write('C2','Num Sold',$format);
 
-
+##Make call to DB for sales information
 my $dbh = DBI->connect("DBI:mysql:$db:$host", $user, $pass);
 my $sql = "SELECT D.SALES_UNITS, D.SKU, I.DESC FROM SUBSTATION.DLYSALES as D, SUBSTATION.INVTRY as I WHERE D.SKU = I.SKU";
 my $sth = $dbh ->prepare($sql);
-
 $sth -> execute() or die $DBI::errstr;
 
+##loop through data and write to excel sheet.
 while(my @row = $sth -> fetchrow_array()){
 	my ($sale_units,$sku,$description,) = @row;
 	$worksheet->write( 'A'.$rowNum,$description);
 	$worksheet->write( 'B'.$rowNum,$sku);
 	$worksheet->write( 'C'.$rowNum,$sale_units);
 	$rowNum++;
-	print "$description,$sku,$sale_units\n"; 
 }
 
+##set up chart with data and add it to sheet.
 $chart -> add_series (
 		categories => '=Sheet1!$A$3:$A$'.$rowNum,
         values     => '=Sheet1!$C$3:$C$'.$rowNum
@@ -48,5 +48,4 @@ $chart->set_legend(none => 1);
 $worksheet -> insert_chart('E2',$chart);
  
 $sth->finish;
-
 exit(0);
